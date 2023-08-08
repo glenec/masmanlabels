@@ -1,6 +1,8 @@
 import requests
 import json
+import openpyxl
 
+data = []
 
 def get_product_price_avail(key, parts, field_list=None, wh=None, cust=None, prices=None):
     product = {"product": [{"part": part} for part in parts]}
@@ -42,8 +44,8 @@ def add_to_list():  # to do
 def save_and_print():   # to do
     return
 
-def clear_list():   # to do
-    return
+def clear_list(data):   # to do
+    data = []
 
 
 if __name__ == "__main__":
@@ -55,8 +57,13 @@ if __name__ == "__main__":
         wh = ""
         cust = ""
         prices = "X"
-
-        result = get_product_price_avail(key, parts, field_list, wh, cust, prices)
+        data = []
+        result = get_product_price_avail(key, parts, field_list, wh, cust, prices) # result = ["code", "description"]
+        data.append(result)
+        save_and_print()
         print(result)
+
+        clear_list()
+
     except Exception as e:
         print("Error:", str(e))
