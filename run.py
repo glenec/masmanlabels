@@ -5,7 +5,7 @@ import json
 from masman_label import clear_list, get_readable_data, get_zpl_data, get_product_price_avail, zpl_print
 from tkinter.scrolledtext import ScrolledText
 import sv_ttk
-
+from win32 import win32print
 
 # Your get_product_price_avail and generate_zpl functions here
 

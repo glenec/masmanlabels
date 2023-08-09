@@ -1,8 +1,12 @@
 import requests
 import json
 import openpyxl
+import pythoncom
+import win32api
+import win32print
+import re
 from zebra import Zebra
-
+from win32 import win32print
 zpl_data = []
 readable_data = []
 
@@ -46,9 +50,10 @@ def get_product_price_avail(key, parts, field_list=None, wh=None, cust=None, pri
 def generate_zpl(part, desc, nb=None):
     zpl_template = """
         ^XA
-        ^FO50,50^BY3^BCN,100,Y,N,N^FD{part_number}^FS
-        ^CFA,10^FO60,280^A0N,15^FD{description}^FS
-        ^CFA,10^FO60,300^A0N,15^FD{NB}^FS
+        ^FO30,60^BY3^BCN,100,N,N,N,A^FD{part_number}^FS
+        ^CFA,10^FO30,180^A0N,60^FD{part_number}^FS
+        ^CFA,10^FO30,280^A0N,30^FD{description}^FS
+        ^CFA,10^FO30,315^A0N,30^FD{NB}^FS
         ^XZ
     """
     return zpl_template.format(part_number=part, description=desc, NB=nb or "")
@@ -60,20 +65,40 @@ def get_zpl_data():
     return zpl_data
 
 def add_to_list(response):  # to do
-    #data.append(generate_zpl(part, desc, nb))
-    # Parses response to get "part" and "description from response
-    # Then adds the zpl data to zpl_data
-    # And adds readable data to readable_data as an array ["Part", "Description"]
 
+    ## To be replaced
     ## Testing only
-    nb = None
-    zpl_data.append(generate_zpl(response, "TestDesc", nb))
-    readable_data.append("{} | {} Description".format(response, response))
+    part = "B08GWWBVL9-T1"
+    temp_str = "NETGEAR Orbi Whole Home WiFi 6 Tri-Band Mesh System, AX4200 Wireless Speed, Up to 4.2Gbps, 2 Pack, Model RBK752. NB: Turns On, No Further Testing."
+    description, nb = parse_description_nb(temp_str)
+    zpl_data.append(generate_zpl(part, description, nb))
+    readable_data.append("{} | {}".format(part, description + nb))
+    print (zpl_data[0])
     return
+
+def parse_description_nb(full_desc):
+    nb_keywords = ["N.B.", "NB:", "N.b:", "N.B:", "NB -"]
+    regex_pattern = '|'.join(re.escape(keyword) for keyword in nb_keywords)
+    match = re.search(regex_pattern, full_desc, flags=re.IGNORECASE)
+
+    if match:
+        description = full_desc[:match.start()].strip()
+        nb = "NB: " + full_desc[match.end():].strip()
+    else:
+        description = description
+        nb = ""
+    
+    return description, nb
+
 
 def zpl_print():   
-    # Prints the zpl_data to the connected ZPL printer
-    return
+    z = Zebra()
+    q = z.getqueues()
+    z.setqueue(q)
+    z.setup()
+    for label in zpl_data:
+        z.output(label)
+    
 
 def clear_list():   # to do
     zpl_data.clear()
