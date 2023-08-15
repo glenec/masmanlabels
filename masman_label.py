@@ -7,6 +7,7 @@ import win32print
 import re
 from zebra import Zebra
 from win32 import win32print
+import random
 zpl_data = []
 readable_data = []
 
@@ -68,11 +69,20 @@ def add_to_list(response):  # to do
 
     ## To be replaced
     ## Testing only
-    part = "B08GWWBVL9-T1"
-    temp_str = "NETGEAR Orbi Whole Home WiFi 6 Tri-Band Mesh System, AX4200 Wireless Speed, Up to 4.2Gbps, 2 Pack, Model RBK752. NB: Turns On, No Further Testing."
-    description, nb = parse_description_nb(temp_str)
+    #part = "B08GWWBVL9-T1"
+    #temp_str = "NETGEAR Orbi Whole Home WiFi 6 Tri-Band Mesh System, AX4200 Wireless Speed, Up to 4.2Gbps, 2 Pack, Model RBK752. NB: Turns On, No Further Testing."
+    part = response
+    temp_str =[
+        "LOREM Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit, Sed Do EuisMod Tempor. NB: Faulty, does not power on.",
+        "GOURMIA 6.7L Digital Air Fryer , GAF798. NB: Has been used, missing tray accessories.",
+        "HOMEDICS Shiatsu Bliss Foot Spa With Heat Boost, White. NB: Has been used, not in original box, missing 1x spinning attachment.",
+        "HIDDEN WILD XL Folding Camp Cot, Green, L 200 x W 80 x H 47 cm. NB: Not in box.",
+        "MAC SPORTS Extra Large Folding Wagon with Cargo Net, Grey, W 560 x H 200 x D 820 mm. NB: Minor bend on frame, in working order, not in box.",
+        "MAC SPORTS Beach Day Lounger Combo Cart. NB: Minor use, not in original packaging."
+        ]
+    description, nb = parse_description_nb(random.choice(temp_str))
     zpl_data.append(generate_zpl(part, description, nb))
-    readable_data.append("{} | {}".format(part, description + nb))
+    readable_data.append("{}\n{}\n{}".format(part, description, nb))
     print (zpl_data[0])
     return
 

@@ -21,17 +21,32 @@ def display_parts():
         widget.destroy()
 
     font_options = ("Arial", 12)
-    colours = ["lightblue", "lightgreen", "lightpink", "lightyellow"]
-
+    colours = ["lightblue", "lightpink", "lightyellow"]
+    
     for num, item in enumerate(get_readable_data()):
-        part_label = tk.Label(list_frame, text=f"{item}", anchor="w", justify="left", bg=colours[num % len(colours)], 
-                      font=font_options, fg="black", wraplength=canvas.winfo_width(), width = canvas.winfo_width())
-        part_label.grid(row=num, column=0, sticky="ew")
+        parts = item.split('\n', 1)
+        part_number = parts[0]
+        description = parts[1] if len (parts) > 1 else ""
 
+        MAX_PART_NUMBER_WIDTH = 125
+        entry_frame = tk.Frame(list_frame, bg=colours[num % len(colours)])
+        entry_frame.grid(row=num, column=0, sticky="ew", columnspan=2)
 
+        # Label for part number
+        part_number_label = tk.Label(entry_frame, text=part_number, anchor="w", justify="left", 
+                             bg=colours[num % len(colours)], font=font_options, 
+                             fg="black", width=15, wraplength=MAX_PART_NUMBER_WIDTH)
+        part_number_label.grid(row=0, column=0, sticky="ew")
+
+        content_wrap_length = canvas.winfo_width() - part_number_label.winfo_reqwidth()
+        # Label for the remaining content
+        content_label = tk.Label(entry_frame, text=description, anchor="w", justify="left",
+                         bg=colours[num % len(colours)], font=font_options, 
+                         fg="black", wraplength=content_wrap_length, padx=20)
+        content_label.grid(row=0, column=1, sticky="ew")
+        entry_frame.update()
     list_frame.grid_rowconfigure(get_readable_data().__len__(), weight=1)
     list_frame.update_idletasks()  # Needed to get the actual frame size
-    canvas.configure(scrollregion=canvas.bbox("all"))  # Update the scrollable region
 
 def fetch_data_and_display():
     try:
@@ -46,11 +61,11 @@ def on_enter(event):
     if part:
         parts.append(part)
         fetch_data_and_display()
-        display_parts()
         part_entry.delete(0, tk.END)
     
 def on_canvas_scroll(event):
     canvas.yview_scroll(-1 * (event.delta // 120), "units")
+    canvas.configure(scrollregion=canvas.bbox("all"))
 
 def on_window_resize(event):
     # Adjust the canvas size when the window is resized
@@ -64,7 +79,7 @@ def clear_and_refresh():
 
 if __name__ == "__main__":
     app = tk.Tk()
-    app.title("MASMAN Label Printer")
+    app.title("GLEN")
     app.geometry("600x800")
 
     sv_ttk.set_theme("dark")
@@ -96,7 +111,7 @@ if __name__ == "__main__":
     canvas_frame = canvas.create_window((0, 0), window=list_frame, anchor='nw')
 
     # Scroll bar
-    list_frame.bind("<Configure>", lambda event: canvas.configure(scrollregion=canvas.bbox("all")))
+    app.bind("<Configure>", lambda event: app.configure(scrollregion=app.bbox("all")))
     scrollbar = ttk.Scrollbar(app, orient=tk.VERTICAL, command=canvas.yview)
     scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
     canvas.configure(yscrollcommand=scrollbar.set)
