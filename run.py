@@ -44,7 +44,7 @@ def display_parts():
                          bg=colours[num % len(colours)], font=font_options, 
                          fg="black", wraplength=content_wrap_length, padx=20)
         content_label.grid(row=0, column=1, sticky="ew")
-        entry_frame.update()
+
     list_frame.grid_rowconfigure(get_readable_data().__len__(), weight=1)
     list_frame.update_idletasks()  # Needed to get the actual frame size
 
@@ -111,7 +111,7 @@ if __name__ == "__main__":
     canvas_frame = canvas.create_window((0, 0), window=list_frame, anchor='nw')
 
     # Scroll bar
-    app.bind("<Configure>", lambda event: app.configure(scrollregion=app.bbox("all")))
+    app.bind("<Configure>", lambda event: canvas.configure(scrollregion=canvas.bbox("all")))
     scrollbar = ttk.Scrollbar(app, orient=tk.VERTICAL, command=canvas.yview)
     scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
     canvas.configure(yscrollcommand=scrollbar.set)
