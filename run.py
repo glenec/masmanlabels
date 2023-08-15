@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
+from ttkthemes import ThemedTk
 import requests
 import json
 from masman_label import clear_list, get_readable_data, get_zpl_data, get_product_price_avail, zpl_print
@@ -21,7 +22,7 @@ def display_parts():
         widget.destroy()
 
     font_options = ("Arial", 12)
-    colours = ["lightblue", "lightpink", "lightyellow"]
+    colours = ["white", "lightgrey"]
     
     for num, item in enumerate(get_readable_data()):
         parts = item.split('\n', 1)
@@ -35,14 +36,14 @@ def display_parts():
         # Label for part number
         part_number_label = tk.Label(entry_frame, text=part_number, anchor="w", justify="left", 
                              bg=colours[num % len(colours)], font=font_options, 
-                             fg="black", width=15, wraplength=MAX_PART_NUMBER_WIDTH)
+                             fg="black", width=15, wraplength=MAX_PART_NUMBER_WIDTH, pady=5)
         part_number_label.grid(row=0, column=0, sticky="ew")
 
         content_wrap_length = canvas.winfo_width() - part_number_label.winfo_reqwidth()
         # Label for the remaining content
         content_label = tk.Label(entry_frame, text=description, anchor="w", justify="left",
                          bg=colours[num % len(colours)], font=font_options, 
-                         fg="black", wraplength=content_wrap_length, padx=20)
+                         fg="black", wraplength=content_wrap_length, padx=20, pady=5)
         content_label.grid(row=0, column=1, sticky="ew")
 
     list_frame.grid_rowconfigure(get_readable_data().__len__(), weight=1)
@@ -78,11 +79,11 @@ def clear_and_refresh():
     display_parts()
 
 if __name__ == "__main__":
-    app = tk.Tk()
+    app = ThemedTk(theme="vista")
     app.title("GLEN")
     app.geometry("600x800")
-
-    sv_ttk.set_theme("dark")
+    print(app.get_themes())
+    #sv_ttk.set_theme("dark")
 
     app.bind("<Configure>", on_window_resize)
     

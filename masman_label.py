@@ -104,7 +104,7 @@ def parse_description_nb(full_desc):
 def zpl_print():   
     z = Zebra()
     q = z.getqueues()
-    z.setqueue(q)
+    z.setqueue(q[0])
     z.setup()
     for label in zpl_data:
         z.output(label)
