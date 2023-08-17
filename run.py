@@ -10,12 +10,7 @@ from win32 import win32print
 
 # Your get_product_price_avail and generate_zpl functions here
 
-key = "97479037"
 parts = []
-field_list = []
-wh = ""
-cust = ""
-prices = "X"
 
 def display_parts():
     for widget in list_frame.winfo_children():
@@ -51,10 +46,11 @@ def display_parts():
 
 def fetch_data_and_display():
     try:
-        get_product_price_avail(key, parts, field_list, wh, cust, prices)
+        valid = get_product_price_avail(parts)
+        if valid == True:
+            display_parts()
     except Exception as e:
         messagebox.showerror("Error", f"Error fetching data for part {parts[0]}: {str(e)}")
-    display_parts()
     parts.clear()
 
 def on_enter(event):
@@ -82,7 +78,6 @@ if __name__ == "__main__":
     app = ThemedTk(theme="vista")
     app.title("GLEN")
     app.geometry("600x800")
-    print(app.get_themes())
     #sv_ttk.set_theme("dark")
 
     app.bind("<Configure>", on_window_resize)
