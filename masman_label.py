@@ -16,8 +16,9 @@ readable_data = []
 
 def get_product_price_avail(parts):
     
-    url = "URL"
+    url = "URL" # Replace this with url
 
+    # replace key section with API key
     payload = 'f=getProductPriceAvail&key=REPLACETHISWITHAPIKEY&product=%7B%22product%22%3A%5B%7B%22part%22%3A%22{}%22%7D%5D%7D&fields=%7B%22fields%22%3A%5B%7B%22field%22%3A%22descr%22%7D%5D%7D&wh=&cust=&incexgst=X'.format(parts[0])
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -79,7 +80,7 @@ def parse_description_nb(full_desc):
 
 
 def zpl_print():   
-    z = Zebra() # add name of Zebra Printer here
+    z = Zebra() # add name of Zebra Printer here as string arg
     q = z.getqueues()
     z.setqueue(q[0])
     z.setup()
