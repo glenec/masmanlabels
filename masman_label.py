@@ -5,9 +5,10 @@ import pythoncom
 import win32api
 import win32print
 import re
+import config
 from zebra import Zebra
 from win32 import win32print
-import random
+
 zpl_data = []
 readable_data = []
 
@@ -16,10 +17,8 @@ readable_data = []
 
 def get_product_price_avail(parts):
     
-    url = "URL" # Replace this with url
-
-    # replace key section with API key
-    payload = 'f=getProductPriceAvail&key=REPLACETHISWITHAPIKEY&product=%7B%22product%22%3A%5B%7B%22part%22%3A%22{}%22%7D%5D%7D&fields=%7B%22fields%22%3A%5B%7B%22field%22%3A%22descr%22%7D%5D%7D&wh=&cust=&incexgst=X'.format(parts[0])
+    url = config.url
+    payload = 'f=getProductPriceAvail&key={}&product=%7B%22product%22%3A%5B%7B%22part%22%3A%22{}%22%7D%5D%7D&fields=%7B%22fields%22%3A%5B%7B%22field%22%3A%22descr%22%7D%5D%7D&wh=&cust=&incexgst=X'.format(config.apikey, parts[0])
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
     }
@@ -49,8 +48,7 @@ def get_readable_data():
 def get_zpl_data():
     return zpl_data
 
-def add_to_list(response):  # to do
-
+def add_to_list(response): 
     response_dict = json.loads(response)
     part = response_dict["Product"][0]["Part"]
     descr = response_dict["Product"][0]["descr"]
@@ -80,7 +78,7 @@ def parse_description_nb(full_desc):
 
 
 def zpl_print():   
-    z = Zebra() # add name of Zebra Printer here as string arg
+    z = Zebra(config.printerName)
     q = z.getqueues()
     z.setqueue(q[0])
     z.setup()

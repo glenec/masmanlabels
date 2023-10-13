@@ -27,21 +27,19 @@ def display_parts():
         entry_frame = tk.Frame(list_frame, bg=colours[num % len(colours)])
         entry_frame.grid(row=num, column=0, sticky="ew", columnspan=2)
 
-        # Label for part number
         part_number_label = tk.Label(entry_frame, text=part_number, anchor="w", justify="left", 
                              bg=colours[num % len(colours)], font=font_options, 
                              fg="black", width=15, wraplength=MAX_PART_NUMBER_WIDTH, pady=5)
         part_number_label.grid(row=0, column=0, sticky="ew")
 
         content_wrap_length = canvas.winfo_width() - part_number_label.winfo_reqwidth()
-        # Label for the remaining content
         content_label = tk.Label(entry_frame, text=description, anchor="w", justify="left",
                          bg=colours[num % len(colours)], font=font_options, 
                          fg="black", wraplength=content_wrap_length, padx=20, pady=5)
         content_label.grid(row=0, column=1, sticky="ew")
 
     list_frame.grid_rowconfigure(get_readable_data().__len__(), weight=1)
-    list_frame.update_idletasks()  # Needed to get the actual frame size
+    list_frame.update_idletasks() 
 
 def fetch_data_and_display():
     try:
@@ -64,7 +62,6 @@ def on_canvas_scroll(event):
     canvas.configure(scrollregion=canvas.bbox("all"))
 
 def on_window_resize(event):
-    # Adjust the canvas size when the window is resized
     canvas.configure(scrollregion=canvas.bbox("all"))
     canvas.itemconfig(canvas_frame, width=event.width)
     list_frame.update_idletasks()
@@ -75,9 +72,8 @@ def clear_and_refresh():
 
 if __name__ == "__main__":
     app = ThemedTk(theme="vista")
-    app.title("GLEN")
+    app.title("Msmn Barcode Printer")
     app.geometry("600x800")
-    #sv_ttk.set_theme("dark")
 
     app.bind("<Configure>", on_window_resize)
     
